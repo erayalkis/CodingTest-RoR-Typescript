@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Container, ListGroup, Form } from "react-bootstrap";
 import { ResetButton } from "./uiComponent";
 import axios from "axios";
+import Todo from "./todo";
 
 type TodoItem = {
   id: number;
@@ -21,16 +22,6 @@ const TodoList: React.FC<Props> = ({ todoItems }) => {
     axios.defaults.headers.common["X-CSRF-TOKEN"] = token.content;
   }, []);
 
-  const checkBoxOnCheck = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    todoItemId: number
-  ): void => {
-    axios.post("/todo", {
-      id: todoItemId,
-      checked: e.target.checked,
-    });
-  };
-
   const resetButtonOnClick = (): void => {
     axios.post("/reset").then(() => location.reload());
   };
@@ -39,15 +30,8 @@ const TodoList: React.FC<Props> = ({ todoItems }) => {
     <Container>
       <h3>2022 Wish List</h3>
       <ListGroup>
-        {todoItems.map((todo) => (
-          <ListGroup.Item key={todo.id}>
-            <Form.Check
-              type="checkbox"
-              label={todo.title}
-              checked={todo.checked}
-              onChange={(e) => checkBoxOnCheck(e, todo.id)}
-            />
-          </ListGroup.Item>
+        {todoItems.map((todo_data) => (
+          <Todo {...todo_data} />
         ))}
         <ResetButton onClick={resetButtonOnClick}>Reset</ResetButton>
       </ListGroup>
